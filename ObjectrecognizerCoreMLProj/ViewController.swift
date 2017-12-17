@@ -10,9 +10,19 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    let context = CIContext()
+    let model = SqueezeNet()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        guard let image = UIImage(named: "test.jpg") else { return }
+        let modelSize = CGSize(width: 227, height: 227)
+        
+        guard let resizedPixelBuffer = CIImage(image: image)?.pixelBuffer(at: modelSize, context: context) else { return }
+        let prediction = try? self.model.prediction(image: resizedPixelBuffer)
+        
+        print(prediction?.classLabel ?? "Unknown")
     }
 
 
